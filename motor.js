@@ -4,10 +4,88 @@ con valor de \$${registro.valor}
 En el barrio: ${registro.categoria}`;
 }
 
-function listarTodo(datos){
-  for (const registro of datos) {
-    console.log(mostrarRegistro(registro) + "\n");
+function listarTodo(tabla){
+  for (const objeto of tabla) {
+    console.log(mostrarRegistro(objeto) + "\n");
   }
+}
+
+function totalGeneral(tabla){
+  let acomulador = 0;
+  for (const objeto of tabla){
+    acomulador = acomulador + objeto.valor;
+  }
+  return acomulador
+}
+
+function promedio(tabla){
+  let acomulador=0;
+  for (const objeto of tabla){
+    acomulador = (acomulador + objeto.valor);
+  }
+  acomulador = acomulador/tabla.length;
+  return acomulador;
+
+}
+
+function registroMayor(tabla){
+  let mayor = 0;
+  let objetoMayor;
+  for (const objeto of tabla){
+    if (objeto.valor > mayor){
+      mayor = objeto.valor;
+      objetoMayor = objeto
+    }
+  }
+  return objetoMayor;
+}
+
+function filtrarPorCategoria(tabla, categoria){
+  let objetosEncontrados = [];
+  for (const objeto of tabla){
+    if (objeto.categoria.toLowerCase() === categoria.toLowerCase()){
+      objetosEncontrados.push(objeto);
+    }
+  }
+  return objetosEncontrados;
+}
+
+// function totalesPorCategoria(tabla){
+//   let totalesCategoria = {};
+//   for (const registro of tabla) {
+//     const categoria = registro.categoria.trim().toLowerCase();
+//     const valor = registro.valor;
+
+//     if (totalesCategoria[categoria]){
+//       totalesCategoria[categoria] += valor
+//     } else {
+//       totalesCategoria[categoria] = valor;
+//     }
+  
+//   }
+//   return totalesCategoria;
+// }
+
+function totalesPorCategoria(tabla){
+  let totalesCategoria = [];
+  for (const registro of tabla) {
+
+    let categoriaExiste = false;
+    for (const objeto of totalesCategoria){
+      if (registro.categoria.toLowerCase() === objeto.categoria.toLowerCase())
+      {
+        objeto.total += registro.valor;
+        categoriaExiste = true;
+      }
+    }
+
+    if (!categoriaExiste) 
+    {
+      totalesCategoria.push({ categoria: registro.categoria, total: registro.valor});
+    }
+    
+  }
+  return totalesCategoria;
 }
 
 const domiciliosMedellin = [
@@ -67,7 +145,7 @@ const domiciliosMedellin = [
   },
   {
     persona: "Sofia Valencia",
-    categoria: "Manrique",
+    categoria: "El Poblado",
     dia: 7,
     valor: 10500,
     tipoDePago: "Transferencia",
@@ -143,7 +221,7 @@ const domiciliosMedellin = [
   },
   {
     persona: "Santiago Londoño",
-    categoria: "Los Colores",
+    categoria: "El Poblado",
     dia: 1,
     valor: 8300,
     tipoDePago: "Transferencia",
@@ -233,4 +311,21 @@ const domiciliosMedellin = [
   }
 ];
 
-listarTodo(domiciliosMedellin);
+
+console.table(domiciliosMedellin);
+//listarTodo(domiciliosMedellin);
+console.log(totalGeneral(domiciliosMedellin));
+// Promedio
+let promedioValores  = promedio(domiciliosMedellin);
+console.log("El promedio de la variable valor es : " + promedioValores);
+// Registro mayor
+let objetoMayor = registroMayor(domiciliosMedellin);
+console.log(objetoMayor);
+
+// Lista de registros filtrados
+console.table(filtrarPorCategoria(domiciliosMedellin,"El Poblado"))
+
+// Totales por categoría
+console.table(totalesPorCategoria(domiciliosMedellin));
+
+
