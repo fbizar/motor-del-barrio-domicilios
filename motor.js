@@ -1,3 +1,5 @@
+let normalizar = (texto) => texto.trim().toLowerCase();
+
 function mostrarRegistro(registro){
   return `Domicilio entregado a: ${registro.persona}
 con valor de \$${registro.valor}
@@ -86,6 +88,28 @@ function totalesPorCategoria(tabla){
     
   }
   return totalesCategoria;
+}
+
+// Set y Map
+function personasUnicas(datos){
+  const personaUnique = new Set();
+  for (const registro of datos) {
+    personaUnique.add(registro.persona.trim().toLowerCase());
+  }
+  return personaUnique;
+}
+
+function recurrentesLento(datos){
+  const personasDuplicadas = new Set();
+  for (let i = 0; i < datos.length; i++){
+    for (let j = 0; j < datos.length; j++) {
+      if (i === j) continue;
+      if (normalizar(datos[j].persona) === normalizar(datos[i].persona)){
+          personasDuplicadas.add(datos[i].persona);
+      }
+    }
+  }
+  return personasDuplicadas;
 }
 
 const domiciliosMedellin = [
@@ -328,4 +352,8 @@ console.table(filtrarPorCategoria(domiciliosMedellin,"El Poblado"))
 // Totales por categoría
 console.table(totalesPorCategoria(domiciliosMedellin));
 
+//Personas únicas
+console.log(personasUnicas(domiciliosMedellin).size);
 
+//Personas repetidas
+console.log(recurrentesLento(domiciliosMedellin));
