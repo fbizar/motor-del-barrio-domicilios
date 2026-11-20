@@ -112,6 +112,28 @@ function recurrentesLento(datos){
   return personasDuplicadas;
 }
 
+function recurrentesRapido(datos){
+  const personas = new Set();
+  const personasRepetidas = new Set();
+  for (const registro of datos){
+
+    if(!personas.has(registro.persona)){
+      personas.add(registro.persona);
+    }else{
+      personasRepetidas.add(registro.persona);
+    }
+  }
+  return personasRepetidas;
+}
+
+function categoriaEstrella(datos){
+  const mejorCategoria = new Map();
+  for (const registro of datos){
+    mejorCategoria[registro.categoria] = (mejorCategoria[registro.categoria] || 0) + 1;
+  }
+  return Object.fromEntries(Object.entries(mejorCategoria).sort((a,b) => b[1]-a[1]).slice(0,1));
+}
+
 const domiciliosMedellin = [
   {
     persona: "Alejandro Restrepo",
@@ -357,3 +379,7 @@ console.log(personasUnicas(domiciliosMedellin).size);
 
 //Personas repetidas
 console.log(recurrentesLento(domiciliosMedellin));
+console.log(recurrentesRapido(domiciliosMedellin));
+
+//Mejor categoria
+console.log(categoriaEstrella(domiciliosMedellin));
