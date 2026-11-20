@@ -1,5 +1,7 @@
 let normalizar = (texto) => texto.trim().toLowerCase();
 
+
+// ---------- NIVEL 1 · Datos ----------
 function mostrarRegistro(registro){
   return `Domicilio entregado a: ${registro.persona}
 con valor de \$${registro.valor}
@@ -12,6 +14,7 @@ function listarTodo(tabla){
   }
 }
 
+// ---------- NIVEL 2 · Reportes ----------
 function totalGeneral(tabla){
   let acomulador = 0;
   for (const objeto of tabla){
@@ -90,7 +93,7 @@ function totalesPorCategoria(tabla){
   return totalesCategoria;
 }
 
-// Set y Map
+// ---------- NIVEL 3 · Set y Map ----------
 function personasUnicas(datos){
   const personaUnique = new Set();
   for (const registro of datos) {
@@ -127,12 +130,38 @@ function recurrentesRapido(datos){
 }
 
 function categoriaEstrella(datos){
-  const mejorCategoria = new Map();
+  const conteoPorCategoria = new Map();
+  let claveMejor;
   for (const registro of datos){
-    mejorCategoria[registro.categoria] = (mejorCategoria[registro.categoria] || 0) + 1;
+    conteoPorCategoria[registro.categoria] = (conteoPorCategoria[registro.categoria] || 0) + 1;
+
+    if (conteoPorCategoria[registro.categoria] > (!claveMejor ? 0 : conteoPorCategoria[claveMejor]))
+    {
+      claveMejor = registro.categoria;
+    }
   }
-  return Object.fromEntries(Object.entries(mejorCategoria).sort((a,b) => b[1]-a[1]).slice(0,1));
+  const mejorCategoria = new Map();
+  mejorCategoria[claveMejor] = conteoPorCategoria[claveMejor];
+
+  return !claveMejor ? null : mejorCategoria;
 }
+
+function parQueSuma(datos, objetivo){
+  for (let i = 0; i < datos.length; i++) {
+    const registroi = datos[i];
+    
+    for (let j = 0; j < datos.length; j++) {
+      const registroj = datos[j];
+
+      if (i === j) continue;
+      
+      if ((registroi.valor+registroj.valor) === objetivo)
+        return [registroi,registroj];
+    }
+  }
+  return null;
+}
+
 
 const domiciliosMedellin = [
   {
@@ -285,7 +314,7 @@ const domiciliosMedellin = [
   },
   {
     persona: "Juan David Gómez",
-    categoria: "Castilla",
+    categoria: "Robledo",
     dia: 3,
     valor: 9800,
     tipoDePago: "Transferencia",
@@ -312,7 +341,7 @@ const domiciliosMedellin = [
   },
   {
     persona: "Sara Agudelo",
-    categoria: "Caribe",
+    categoria: "Robledo",
     dia: 6,
     valor: 8400,
     tipoDePago: "Efectivo",
@@ -358,8 +387,12 @@ const domiciliosMedellin = [
 ];
 
 
+// Nivel 1:
 console.table(domiciliosMedellin);
 //listarTodo(domiciliosMedellin);
+
+// Nivel 2:
+// Total general
 console.log(totalGeneral(domiciliosMedellin));
 // Promedio
 let promedioValores  = promedio(domiciliosMedellin);
@@ -374,6 +407,7 @@ console.table(filtrarPorCategoria(domiciliosMedellin,"El Poblado"))
 // Totales por categoría
 console.table(totalesPorCategoria(domiciliosMedellin));
 
+// Nivel 3:
 //Personas únicas
 console.log(personasUnicas(domiciliosMedellin).size);
 
@@ -383,3 +417,6 @@ console.log(recurrentesRapido(domiciliosMedellin));
 
 //Mejor categoria
 console.log(categoriaEstrella(domiciliosMedellin));
+
+// Dos registros que sumados dan (objetivo)
+console.table(parQueSuma(domiciliosMedellin,14200))
