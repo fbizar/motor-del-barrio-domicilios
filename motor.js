@@ -162,11 +162,42 @@ function parQueSuma(datos, objetivo){
   return null;
 }
 
+// ---------- NIVEL 4 · Cola y pila ----------
+const colaDeAtencion = [];
+function llegar(persona){
+    colaDeAtencion.push(persona);
+    return colaDeAtencion;
+}
+
+function atender(){
+    if (colaDeAtencion.length === 0){
+        return null;
+    }
+    return colaDeAtencion.shift();
+}
+
+const historial = [];
+
+function agregarRegistro(datos, registro){
+    datos.push(registro);
+    historial.push(registro);
+    return datos;
+    }
+
+    function deshacer(datos){
+    if (historial.length === 0){
+        return null;
+    }
+    const ultimo = historial.pop();
+    datos.pop();
+    return datos;
+}
+
 
 const domiciliosMedellin = [
   {
     persona: "Alejandro Restrepo",
-    categoria: "El Poblado",
+    categoria: "Las brisas",
     dia: 1,
     valor: 9500,
     tipoDePago: "Transferencia",
@@ -220,7 +251,7 @@ const domiciliosMedellin = [
   },
   {
     persona: "Sofia Valencia",
-    categoria: "El Poblado",
+    categoria: "Las brisas",
     dia: 7,
     valor: 10500,
     tipoDePago: "Transferencia",
@@ -236,8 +267,6 @@ const domiciliosMedellin = [
     cedula: "1017234890",
     fechaDeEntrega: "2026-11-24"
   },
-
-
   {
     persona: "Mateo Giraldo",
     categoria: "Buenos Aires",
@@ -265,8 +294,6 @@ const domiciliosMedellin = [
     cedula: "71567890",
     fechaDeEntrega: "2026-11-27"
   },
-
-
   {
     persona: "Valeria Mejía",
     categoria: "Floresta",
@@ -296,7 +323,7 @@ const domiciliosMedellin = [
   },
   {
     persona: "Santiago Londoño",
-    categoria: "El Poblado",
+    categoria: "Las brisas",
     dia: 1,
     valor: 8300,
     tipoDePago: "Transferencia",
@@ -386,6 +413,7 @@ const domiciliosMedellin = [
   }
 ];
 
+// ---------- ZONA DE PRUEBAS ----------
 
 // Nivel 1:
 console.table(domiciliosMedellin);
@@ -402,7 +430,7 @@ let objetoMayor = registroMayor(domiciliosMedellin);
 console.log(objetoMayor);
 
 // Lista de registros filtrados
-console.table(filtrarPorCategoria(domiciliosMedellin,"El Poblado"))
+console.table(filtrarPorCategoria(domiciliosMedellin,"Las brisas"))
 
 // Totales por categoría
 console.table(totalesPorCategoria(domiciliosMedellin));
@@ -419,4 +447,48 @@ console.log(recurrentesRapido(domiciliosMedellin));
 console.log(categoriaEstrella(domiciliosMedellin));
 
 // Dos registros que sumados dan (objetivo)
-console.table(parQueSuma(domiciliosMedellin,14200))
+console.table(parQueSuma(domiciliosMedellin,14200));
+
+//pruebas colas
+llegar({
+  nombre : 'julian guanume',
+  cedula: '1000194376'
+});
+llegar({
+  nombre : 'samuel velez',
+  cedula: '1000194376'
+});
+llegar({
+  nombre : 'angel bernal',
+  cedula: '1000194376'
+});
+
+console.log(llegar({
+  nombre : 'andres hernandez',
+  cedula: '1000194376'
+}));
+
+let registro = {
+    persona: "Julian Guanume",
+    categoria: "Las brisas",
+    dia: 1,
+    valor: 9500,
+    tipoDePago: "Transferencia",
+    cedula: "1000194376",
+    fechaDeEntrega: "2026-11-22"
+  }
+console.log(atender());
+console.table(agregarRegistro(domiciliosMedellin,registro));
+registro = {
+    persona: "valentina Garcia",
+    categoria: "aranjuez",
+    dia: 1,
+    valor: 9500,
+    tipoDePago: "Transferencia",
+    cedula: "1000194376",
+    fechaDeEntrega: "2026-11-23"
+  };
+console.table(agregarRegistro(domiciliosMedellin,registro));
+console.table(deshacer(domiciliosMedellin));
+console.table(agregarRegistro(domiciliosMedellin,registro));
+console.table(deshacer(domiciliosMedellin));
