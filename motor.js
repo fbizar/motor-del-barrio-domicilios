@@ -3,94 +3,131 @@ let normalizar = (texto) => texto.trim().toLowerCase();
 
 // ---------- NIVEL 1 · Datos ----------
 function mostrarRegistro(registro){
+
   return `Domicilio entregado a: ${registro.persona}
 con valor de \$${registro.valor}
 En el barrio: ${registro.categoria}`;
 }
 
 function listarTodo(tabla){
-  for (const objeto of tabla) {
+  if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0){
+    return `          ##### WARNING #######
+  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
+  } else{
+    for (const objeto of tabla) {
     console.log(mostrarRegistro(objeto) + "\n");
+    }
   }
 }
 
 // ---------- NIVEL 2 · Reportes ----------
 function totalGeneral(tabla){
-  let acomulador = 0;
-  for (const objeto of tabla){
-    acomulador = acomulador + objeto.valor;
+  if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0){
+    return `          ##### WARNING #######
+  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
+  }else{
+    let acomulador = 0;
+    for (const objeto of tabla){
+      acomulador = acomulador + objeto.valor;
+    }
+    return acomulador;
   }
-  return acomulador
 }
 
 function promedio(tabla){
-  let acomulador=0;
-  for (const objeto of tabla){
-    acomulador = (acomulador + objeto.valor);
+  if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0){
+    return `          ##### WARNING #######
+  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
+  }else{
+    let acomulador=0;
+    for (const objeto of tabla){
+      acomulador = (acomulador + objeto.valor);
+    }
+    acomulador = acomulador/tabla.length;
+    return acomulador;
   }
-  acomulador = acomulador/tabla.length;
-  return acomulador;
+  
 
 }
 
 function registroMayor(tabla){
-  let mayor = 0;
-  let objetoMayor;
-  for (const objeto of tabla){
-    if (objeto.valor > mayor){
-      mayor = objeto.valor;
-      objetoMayor = objeto
+  if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0){
+    return `          ##### WARNING #######
+  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
+  }else{
+    let mayor = 0;
+    let objetoMayor;
+    for (const objeto of tabla){
+      if (objeto.valor > mayor){
+        mayor = objeto.valor;
+        objetoMayor = objeto;
+      }
     }
+    return objetoMayor;
   }
-  return objetoMayor;
 }
 
 function filtrarPorCategoria(tabla, categoria){
-  let objetosEncontrados = [];
+  if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0 || categoria === undefined || typeof categoria != "string"){
+    return `          ##### WARNING #######
+  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
+  }else{
+    let objetosEncontrados = [];
   for (const objeto of tabla){
-    if (objeto.categoria.toLowerCase() === categoria.toLowerCase()){
-      objetosEncontrados.push(objeto);
-    }
-  }
-  return objetosEncontrados;
-}
-
-// function totalesPorCategoria(tabla){
-//   let totalesCategoria = {};
-//   for (const registro of tabla) {
-//     const categoria = registro.categoria.trim().toLowerCase();
-//     const valor = registro.valor;
-
-//     if (totalesCategoria[categoria]){
-//       totalesCategoria[categoria] += valor
-//     } else {
-//       totalesCategoria[categoria] = valor;
-//     }
-  
-//   }
-//   return totalesCategoria;
-// }
-
-function totalesPorCategoria(tabla){
-  let totalesCategoria = [];
-  for (const registro of tabla) {
-
-    let categoriaExiste = false;
-    for (const objeto of totalesCategoria){
-      if (registro.categoria.toLowerCase() === objeto.categoria.toLowerCase())
-      {
-        objeto.total += registro.valor;
-        categoriaExiste = true;
+      if (objeto.categoria.toLowerCase() === categoria.toLowerCase()){
+        objetosEncontrados.push(objeto);
       }
     }
+    return objetosEncontrados;
+  }
+  
+}
 
-    if (!categoriaExiste) 
-    {
-      totalesCategoria.push({ categoria: registro.categoria, total: registro.valor});
+function totalesPorCategoriaMostrar(tabla){
+  if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0){
+    return `          ##### WARNING #######
+  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
+  }else{
+    let totalesCategoria = {};
+    for (const registro of tabla) {
+      const categoria = registro.categoria.trim().toLowerCase();
+      const valor = registro.valor;
+
+      if (totalesCategoria[categoria]){
+        totalesCategoria[categoria] += valor;
+      } else {
+        totalesCategoria[categoria] = valor;
+      }
+  
     }
-    
+    return totalesCategoria;
+  }
+  
+}
+
+function totalesPorCategoria(tabla){
+  if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0){
+    return `          ##### WARNING #######
+  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
+  }else{
+    let totalesCategoria = [];
+    for (const registro of tabla) {
+      let categoriaExiste = false;
+      for (const objeto of totalesCategoria){
+        if (registro.categoria.toLowerCase() === objeto.categoria.toLowerCase())
+        {
+          objeto.total += registro.valor;
+          categoriaExiste = true;
+        }
+      }
+
+      if (!categoriaExiste) 
+      {
+        totalesCategoria.push({ categoria: registro.categoria, total: registro.valor});
+      }
   }
   return totalesCategoria;
+  }
 }
 
 // ---------- NIVEL 3 · Set y Map ----------
@@ -155,7 +192,7 @@ function parQueSuma(datos, objetivo){
 
       if (i === j) continue;
       
-      if ((registroi.valor+registroj.valor) === objetivo)
+      if ((registroi.valor + registroj.valor) === objetivo)
         return [registroi,registroj];
     }
   }
@@ -182,15 +219,15 @@ function agregarRegistro(datos, registro){
     datos.push(registro);
     historial.push(registro);
     return datos;
-    }
+}
 
-    function deshacer(datos){
-    if (historial.length === 0){
-        return null;
-    }
-    const ultimo = historial.pop();
-    datos.pop();
-    return datos;
+function deshacer(datos){
+  if (historial.length === 0){
+      return null;
+  }
+  const ultimo = historial.pop();
+  datos.pop();
+  return datos;
 }
 
 
@@ -414,81 +451,99 @@ const domiciliosMedellin = [
 ];
 
 // ---------- ZONA DE PRUEBAS ----------
+// console.log("---------- IMPRIMIR REGISTROS ----------");
+// console.table(domiciliosMedellin);
+// console.log("");
+// // Nivel 1:
+// //console.table(domiciliosMedellin);
+// console.log("---------- LISTAR TODO ----------");
+// console.log(listarTodo());
+// console.log("");
 
-// Nivel 1:
-console.table(domiciliosMedellin);
-//listarTodo(domiciliosMedellin);
+// // Nivel 2:
+// // Total general
+// console.log("---------- TOTAL GENERAL ----------");
+// console.log(`El total general es de: \n $${totalGeneral(domiciliosMedellin)}`);
+// console.log("");
 
-// Nivel 2:
-// Total general
-console.log(totalGeneral(domiciliosMedellin));
 // Promedio
-let promedioValores  = promedio(domiciliosMedellin);
-console.log("El promedio de la variable valor es : " + promedioValores);
-// Registro mayor
-let objetoMayor = registroMayor(domiciliosMedellin);
-console.log(objetoMayor);
+// console.log("---------- PROMEDIO ----------");
+// let promedioValores  = promedio([]);
+// console.log("El promedio de la variable valor es : \n" + promedioValores);
+// console.log("");
 
-// Lista de registros filtrados
-console.table(filtrarPorCategoria(domiciliosMedellin,"Las brisas"))
+// Registro mayor
+// let objetoMayor = registroMayor("lola");
+// console.log("---------- REGISTRO MAYOR ----------");
+// console.table(objetoMayor);
+// console.log("");
+
+// // Lista de registros filtrados
+// console.log("---------- REGISTROS FILTRADOS POR CATEGORIA ----------");
+// console.table(filtrarPorCategoria(domiciliosMedellin,"Las brisas"));
+// console.log("");
 
 // Totales por categoría
-console.table(totalesPorCategoria(domiciliosMedellin));
+// console.log("---------- TOTALES POR CATEGORIA ----------");
+// console.table(totalesPorCategoria("LA"));
+// console.log("");
 
-// Nivel 3:
-//Personas únicas
-console.log(personasUnicas(domiciliosMedellin).size);
+// // Nivel 3:
+// Personas únicas
+// console.log(personasUnicas(domiciliosMedellin).size);
 
-//Personas repetidas
-console.log(recurrentesLento(domiciliosMedellin));
-console.log(recurrentesRapido(domiciliosMedellin));
+// //Personas repetidas
+// console.log(recurrentesLento(domiciliosMedellin));
+// console.log(recurrentesRapido(domiciliosMedellin));
 
-//Mejor categoria
-console.log(categoriaEstrella(domiciliosMedellin));
+// //Mejor categoria
+// console.log(categoriaEstrella(domiciliosMedellin));
 
-// Dos registros que sumados dan (objetivo)
-console.table(parQueSuma(domiciliosMedellin,14200));
+// // Dos registros que sumados dan (objetivo)
+// console.table(parQueSuma(domiciliosMedellin,14200));
 
-//pruebas colas
-llegar({
-  nombre : 'julian guanume',
-  cedula: '1000194376'
-});
-llegar({
-  nombre : 'samuel velez',
-  cedula: '1000194376'
-});
-llegar({
-  nombre : 'angel bernal',
-  cedula: '1000194376'
-});
+// //pruebas colas
+// llegar({
+//   nombre : 'julian guanume',
+//   cedula: '1000194376'
+// });
+// llegar({
+//   nombre : 'samuel velez',
+//   cedula: '1000194376'
+// });
+// llegar({
+//   nombre : 'angel bernal',
+//   cedula: '1000194376'
+// });
 
-console.log(llegar({
-  nombre : 'andres hernandez',
-  cedula: '1000194376'
-}));
+// console.log(llegar({
+//   nombre : 'andres hernandez',
+//   cedula: '1000194376'
+// }));
 
-let registro = {
-    persona: "Julian Guanume",
-    categoria: "Las brisas",
-    dia: 1,
-    valor: 9500,
-    tipoDePago: "Transferencia",
-    cedula: "1000194376",
-    fechaDeEntrega: "2026-11-22"
-  }
-console.log(atender());
-console.table(agregarRegistro(domiciliosMedellin,registro));
-registro = {
-    persona: "valentina Garcia",
-    categoria: "aranjuez",
-    dia: 1,
-    valor: 9500,
-    tipoDePago: "Transferencia",
-    cedula: "1000194376",
-    fechaDeEntrega: "2026-11-23"
-  };
-console.table(agregarRegistro(domiciliosMedellin,registro));
-console.table(deshacer(domiciliosMedellin));
-console.table(agregarRegistro(domiciliosMedellin,registro));
-console.table(deshacer(domiciliosMedellin));
+// let registro = {
+//     persona: "Julian Guanume",
+//     categoria: "Las brisas",
+//     dia: 1,
+//     valor: 9500,
+//     tipoDePago: "Transferencia",
+//     cedula: "1000194376",
+//     fechaDeEntrega: "2026-11-22"
+//   }
+
+// console.log(atender());
+// console.table(agregarRegistro(domiciliosMedellin,registro));
+// registro = {
+//     persona: "valentina Garcia",
+//     categoria: "aranjuez",
+//     dia: 1,
+//     valor: 9500,
+//     tipoDePago: "Transferencia",
+//     cedula: "1000194376",
+//     fechaDeEntrega: "2026-11-23"
+//   };
+
+// console.table(agregarRegistro(domiciliosMedellin,registro));
+// console.table(deshacer(domiciliosMedellin));
+// console.table(agregarRegistro(domiciliosMedellin,registro));
+// console.table(deshacer(domiciliosMedellin));
