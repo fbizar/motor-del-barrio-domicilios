@@ -1,95 +1,142 @@
+
 let normalizar = (texto) => texto.trim().toLowerCase();
 
+const WARNING = `          ##### WARNING #######
+  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
 
 // ---------- NIVEL 1 · Datos ----------
-function mostrarRegistro(registro){
 
-  return `Domicilio entregado a: ${registro.persona}
+function mostrarRegistro(registro){
+  if (
+    registro === undefined ||
+    registro === null ||
+    typeof registro !== "object" ||
+    Array.isArray(registro) ||
+    typeof registro.persona !== "string" ||
+    typeof registro.valor !== "number" ||
+    typeof registro.categoria !== "string"
+  ){
+    return WARNING;
+  } else {
+    return `Domicilio entregado a: ${registro.persona}
 con valor de \$${registro.valor}
 En el barrio: ${registro.categoria}`;
+  }
 }
 
 function listarTodo(tabla){
   if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0){
-    return `          ##### WARNING #######
-  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
-  } else{
+    return WARNING;
+  } else {
     for (const objeto of tabla) {
-    console.log(mostrarRegistro(objeto) + "\n");
+      console.log(mostrarRegistro(objeto) + "\n");
     }
   }
 }
 
 // ---------- NIVEL 2 · Reportes ----------
+
 function totalGeneral(tabla){
   if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0){
-    return `          ##### WARNING #######
-  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
-  }else{
+    return WARNING;
+  } else {
     let acomulador = 0;
+
     for (const objeto of tabla){
+      if (objeto === null || typeof objeto.valor !== "number"){
+        return WARNING;
+      }
+
       acomulador = acomulador + objeto.valor;
     }
+
     return acomulador;
   }
 }
 
 function promedio(tabla){
   if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0){
-    return `          ##### WARNING #######
-  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
-  }else{
-    let acomulador=0;
+    return WARNING;
+  } else {
+    let acomulador = 0;
+
     for (const objeto of tabla){
-      acomulador = (acomulador + objeto.valor);
+      if (objeto === null || typeof objeto.valor !== "number"){
+        return WARNING;
+      }
+
+      acomulador = acomulador + objeto.valor;
     }
-    acomulador = acomulador/tabla.length;
+
+    acomulador = acomulador / tabla.length;
+
     return acomulador;
   }
-  
-
 }
 
 function registroMayor(tabla){
   if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0){
-    return `          ##### WARNING #######
-  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
-  }else{
+    return WARNING;
+  } else {
     let mayor = 0;
     let objetoMayor;
+
     for (const objeto of tabla){
+      if (objeto === null || typeof objeto.valor !== "number"){
+        return WARNING;
+      }
+
       if (objeto.valor > mayor){
         mayor = objeto.valor;
         objetoMayor = objeto;
       }
     }
+
     return objetoMayor;
   }
 }
 
 function filtrarPorCategoria(tabla, categoria){
-  if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0 || categoria === undefined || typeof categoria != "string"){
-    return `          ##### WARNING #######
-  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
-  }else{
+  if(
+    tabla === undefined ||
+    !Array.isArray(tabla) ||
+    tabla.length === 0 ||
+    categoria === undefined ||
+    typeof categoria !== "string"
+  ){
+    return WARNING;
+  } else {
     let objetosEncontrados = [];
-  for (const objeto of tabla){
+
+    for (const objeto of tabla){
+      if (objeto === null || typeof objeto.categoria !== "string"){
+        return WARNING;
+      }
+
       if (objeto.categoria.toLowerCase() === categoria.toLowerCase()){
         objetosEncontrados.push(objeto);
       }
     }
+
     return objetosEncontrados;
   }
-  
 }
 
 function totalesPorCategoriaMostrar(tabla){
   if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0){
-    return `          ##### WARNING #######
-  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
-  }else{
+    return WARNING;
+  } else {
     let totalesCategoria = {};
+
     for (const registro of tabla) {
+      if (
+        registro === null ||
+        typeof registro.categoria !== "string" ||
+        typeof registro.valor !== "number"
+      ){
+        return WARNING;
+      }
+
       const categoria = registro.categoria.trim().toLowerCase();
       const valor = registro.valor;
 
@@ -98,137 +145,246 @@ function totalesPorCategoriaMostrar(tabla){
       } else {
         totalesCategoria[categoria] = valor;
       }
-  
     }
+
     return totalesCategoria;
   }
-  
 }
 
 function totalesPorCategoria(tabla){
   if(tabla === undefined || !Array.isArray(tabla) || tabla.length === 0){
-    return `          ##### WARNING #######
-  TIPO DE DATO INCORRECTO. VUELVE A INTENTARLO`;
-  }else{
+    return WARNING;
+  } else {
     let totalesCategoria = [];
+
     for (const registro of tabla) {
+      if (
+        registro === null ||
+        typeof registro.categoria !== "string" ||
+        typeof registro.valor !== "number"
+      ){
+        return WARNING;
+      }
+
       let categoriaExiste = false;
+
       for (const objeto of totalesCategoria){
-        if (registro.categoria.toLowerCase() === objeto.categoria.toLowerCase())
-        {
+        if (registro.categoria.toLowerCase() === objeto.categoria.toLowerCase()){
           objeto.total += registro.valor;
           categoriaExiste = true;
         }
       }
 
-      if (!categoriaExiste) 
-      {
-        totalesCategoria.push({ categoria: registro.categoria, total: registro.valor});
+      if (!categoriaExiste){
+        totalesCategoria.push({
+          categoria: registro.categoria,
+          total: registro.valor
+        });
       }
-  }
-  return totalesCategoria;
+    }
+
+    return totalesCategoria;
   }
 }
 
 // ---------- NIVEL 3 · Set y Map ----------
+
 function personasUnicas(datos){
-  const personaUnique = new Set();
-  for (const registro of datos) {
-    personaUnique.add(registro.persona.trim().toLowerCase());
+  if(datos === undefined || !Array.isArray(datos) || datos.length === 0){
+    return WARNING;
+  } else {
+    const personaUnique = new Set();
+
+    for (const registro of datos){
+      if (registro === null || typeof registro.persona !== "string"){
+        return WARNING;
+      }
+
+      personaUnique.add(registro.persona.trim().toLowerCase());
+    }
+
+    return personaUnique;
   }
-  return personaUnique;
 }
 
 function recurrentesLento(datos){
-  const personasDuplicadas = new Set();
-  for (let i = 0; i < datos.length; i++){
-    for (let j = 0; j < datos.length; j++) {
-      if (i === j) continue;
-      if (normalizar(datos[j].persona) === normalizar(datos[i].persona)){
-          personasDuplicadas.add(datos[i].persona);
+  if(datos === undefined || !Array.isArray(datos) || datos.length === 0){
+    return WARNING;
+  } else {
+    const personasDuplicadas = new Set();
+
+    for (const registro of datos){
+      if (registro === null || typeof registro.persona !== "string"){
+        return WARNING;
       }
     }
+
+    for (let i = 0; i < datos.length; i++){
+      for (let j = 0; j < datos.length; j++) {
+        if (i === j) continue;
+
+        if (normalizar(datos[j].persona) === normalizar(datos[i].persona)){
+          personasDuplicadas.add(datos[i].persona);
+        }
+      }
+    }
+
+    return personasDuplicadas;
   }
-  return personasDuplicadas;
 }
 
 function recurrentesRapido(datos){
-  const personas = new Set();
-  const personasRepetidas = new Set();
-  for (const registro of datos){
+  if(datos === undefined || !Array.isArray(datos) || datos.length === 0){
+    return WARNING;
+  } else {
+    const personas = new Set();
+    const personasRepetidas = new Set();
 
-    if(!personas.has(registro.persona)){
-      personas.add(registro.persona);
-    }else{
-      personasRepetidas.add(registro.persona);
+    for (const registro of datos){
+      if (registro === null || typeof registro.persona !== "string"){
+        return WARNING;
+      }
+
+      if(!personas.has(registro.persona)){
+        personas.add(registro.persona);
+      } else {
+        personasRepetidas.add(registro.persona);
+      }
     }
+
+    return personasRepetidas;
   }
-  return personasRepetidas;
 }
 
 function categoriaEstrella(datos){
-  const conteoPorCategoria = new Map();
-  let claveMejor;
-  for (const registro of datos){
-    conteoPorCategoria[registro.categoria] = (conteoPorCategoria[registro.categoria] || 0) + 1;
+  if(datos === undefined || !Array.isArray(datos) || datos.length === 0){
+    return WARNING;
+  } else {
+    const conteoPorCategoria = new Map();
+    let claveMejor;
 
-    if (conteoPorCategoria[registro.categoria] > (!claveMejor ? 0 : conteoPorCategoria[claveMejor]))
-    {
-      claveMejor = registro.categoria;
+    for (const registro of datos){
+      if (registro === null || typeof registro.categoria !== "string"){
+        return WARNING;
+      }
+
+      conteoPorCategoria[registro.categoria] =
+        (conteoPorCategoria[registro.categoria] || 0) + 1;
+
+      if (
+        conteoPorCategoria[registro.categoria] >
+        (!claveMejor ? 0 : conteoPorCategoria[claveMejor])
+      ){
+        claveMejor = registro.categoria;
+      }
     }
-  }
-  const mejorCategoria = new Map();
-  mejorCategoria[claveMejor] = conteoPorCategoria[claveMejor];
 
-  return !claveMejor ? null : mejorCategoria;
+    const mejorCategoria = new Map();
+    mejorCategoria[claveMejor] = conteoPorCategoria[claveMejor];
+
+    return !claveMejor ? null : mejorCategoria;
+  }
 }
 
 function parQueSuma(datos, objetivo){
-  for (let i = 0; i < datos.length; i++) {
-    const registroi = datos[i];
-    
-    for (let j = 0; j < datos.length; j++) {
-      const registroj = datos[j];
-
-      if (i === j) continue;
-      
-      if ((registroi.valor + registroj.valor) === objetivo)
-        return [registroi,registroj];
+  if(
+    datos === undefined ||
+    !Array.isArray(datos) ||
+    datos.length === 0 ||
+    objetivo === undefined ||
+    typeof objetivo !== "number"
+  ){
+    return WARNING;
+  } else {
+    for (const registro of datos){
+      if (registro === null || typeof registro.valor !== "number"){
+        return WARNING;
+      }
     }
+
+    for (let i = 0; i < datos.length; i++) {
+      const registroi = datos[i];
+
+      for (let j = 0; j < datos.length; j++) {
+        const registroj = datos[j];
+
+        if (i === j) continue;
+
+        if ((registroi.valor + registroj.valor) === objetivo){
+          return [registroi, registroj];
+        }
+      }
+    }
+
+    return null;
   }
-  return null;
 }
 
 // ---------- NIVEL 4 · Cola y pila ----------
+
 const colaDeAtencion = [];
+
 function llegar(persona){
+  if(
+    persona === undefined ||
+    persona === null ||
+    typeof persona !== "object" ||
+    Array.isArray(persona) ||
+    typeof persona.nombre !== "string"
+  ){
+    return WARNING;
+  } else {
     colaDeAtencion.push(persona);
     return colaDeAtencion;
+  }
 }
 
 function atender(){
-    if (colaDeAtencion.length === 0){
-        return null;
-    }
-    return colaDeAtencion.shift();
+  if (colaDeAtencion.length === 0){
+    return null;
+  }
+
+  return colaDeAtencion.shift();
 }
 
 const historial = [];
 
 function agregarRegistro(datos, registro){
+  if(
+    datos === undefined ||
+    !Array.isArray(datos) ||
+    datos.length === 0 ||
+    registro === undefined ||
+    registro === null ||
+    typeof registro !== "object" ||
+    Array.isArray(registro) ||
+    typeof registro.persona !== "string" ||
+    typeof registro.valor !== "number" ||
+    typeof registro.categoria !== "string"
+  ){
+    return WARNING;
+  } else {
     datos.push(registro);
     historial.push(registro);
     return datos;
+  }
 }
 
 function deshacer(datos){
-  if (historial.length === 0){
+  if(datos === undefined || !Array.isArray(datos) || datos.length === 0){
+    return WARNING;
+  } else {
+    if (historial.length === 0){
       return null;
+    }
+
+    const ultimo = historial.pop();
+    datos.pop();
+
+    return datos;
   }
-  const ultimo = historial.pop();
-  datos.pop();
-  return datos;
 }
+
 
 
 const domiciliosMedellin = [
